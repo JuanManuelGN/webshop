@@ -1,6 +1,6 @@
 package webshop.domain.aggregate
 
-import webshop.domain.entity.ProductEntity
+import webshop.domain.entity.{BankAccount, Customer, ProductEntity}
 
 abstract class Aggregate
 
@@ -16,4 +16,17 @@ object ProductAggregateRoot {
             productDescription: String): ProductAggregateRoot =
 
     new ProductAggregateRoot(ProductEntity(productId, productPrice, productDescription))
+}
+
+case class CustomerAggregateRoot(private val customer: Customer,
+                                 private val account: BankAccount) extends Aggregate {
+
+  def getName: String = customer.name
+  def getEmail: String = customer.email
+  def getAccount: String = account.account
+}
+
+object CustomerAggregateRoot {
+  def apply(name: String, email: String, account: String): CustomerAggregateRoot =
+    new CustomerAggregateRoot(Customer(name, email), BankAccount(account))
 }

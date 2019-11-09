@@ -26,7 +26,9 @@ object WebShop extends App with HandlerImp {
           entity(as[AddCustomerCommand]) { command =>
             complete {
               println(s"command $command")
-              "Order received"
+              val customer: Dto = getDataHandler(command)
+              println(s"added $customer")
+              "Added customer"
             }
           }
         }
