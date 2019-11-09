@@ -6,7 +6,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import spray.json.DefaultJsonProtocol._
-import webshop.application.command.AddProductToStoreCommand
+import webshop.application.command.{AddCustomerCommand, AddProductToStoreCommand}
 import webshop.application.handler.HandlerImp
 import webshop.infrastructure.dto.Dto
 
@@ -17,12 +17,18 @@ object WebShop extends App with HandlerImp {
   implicit val actorMaterializer = ActorMaterializer()
 
   implicit val format = jsonFormat3(AddProductToStoreCommand)
+  implicit val formatCustomer = jsonFormat3(AddCustomerCommand)
 
   lazy val route =
     pathPrefix("api") {
-      path("user") {
+      path("addUser") {
         put {
-          complete("This is a PUT request.")
+          entity(as[AddCustomerCommand]) { command =>
+            complete {
+              println(s"command $command")
+              "Order received"
+            }
+          }
         }
 
       } ~
