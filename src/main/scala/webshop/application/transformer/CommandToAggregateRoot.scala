@@ -1,6 +1,6 @@
 package webshop.application.transformer
 
-import webshop.application.command.{Command, ProductCommand}
+import webshop.application.command.{Command, AddProductToStoreCommand}
 import webshop.domain.aggregate.{Aggregate, ProductAggregateRoot}
 
 trait CommandToAggregateRoot {
@@ -8,7 +8,7 @@ trait CommandToAggregateRoot {
   val commandToAggregateRoot: Command => Aggregate =
     command => {
       command match {
-        case ProductCommand(id, price, description) => ProductAggregateRoot(id, price, description)
+        case AddProductToStoreCommand(id, price, description) => ProductAggregateRoot(id, price, description)
       }
     }
 }
