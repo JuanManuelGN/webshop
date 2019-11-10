@@ -10,7 +10,7 @@ object Store {
   var customerList: Map[String, String] = Map() // email, name
   var shoppingCardList: Map[String, List[Article]] = Map() // email, products
 
-  def addProduct(daoDto: ProductDaoDto): DaoDto = {
+  def addProductToStore(daoDto: ProductDaoDto): DaoDto = {
     val productAlredyExists = stock.contains(daoDto.id)
     if (productAlredyExists) {
       val article = stock.get(daoDto.id).get
@@ -22,8 +22,6 @@ object Store {
     }
     daoDto
   }
-
-  def getEmailList: List[String] = customerList.keys.toList
 
   def addCustomer(daoDto: CustomerDaoDto): DaoDto = {
     customerList = customerList + (daoDto.email -> daoDto.name )
@@ -57,9 +55,11 @@ object Store {
 
   def dropProduct(productId: String, count: Int): Map[String, Article] = stock
 
+  def getEmailList: List[String] = customerList.keys.toList
+
+
   def initProducts: Map[String, (String, Double, String, Int)] =
     Map("milk" -> ("milk", 1.5, "brick of milk", 5),
       "shampoo" -> ("shampoo", 2.0, "shampoo to clean our hair", 3),
       "potatoes" -> ("potatores", 3.7, "5 kg", 2))
-
 }

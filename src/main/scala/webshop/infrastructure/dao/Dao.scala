@@ -7,7 +7,7 @@ trait Dao {
 
   val getDataDao: DaoDto => Either[String, DaoDto] = dto =>
     dto match {
-      case p: ProductDaoDto => Right(Store.addProduct(p))
+      case p: ProductDaoDto => Right(Store.addProductToStore(p))
       case c: CustomerDaoDto => {
         val customerAlredyExistis = Store.getEmailList.contains(c.email)
         if (customerAlredyExistis)
@@ -23,12 +23,11 @@ trait Dao {
 
         val productCountInStock = Store.getProductCount(productId)
 
-        val response =
-          if (count > productCountInStock) {
-            Left("Not enough articles")
-          } else {
-            Right(Store.addProductToShoppingCard(s))
-          }
+        val response = productCountInStock match {
+          case 0 => Left("This article not exists in the shop")
+          case x if x < count => Left("Not enough articles")
+          case _ => Right(Store.addProductToShoppingCard(s))
+        }
 
         response
       }
