@@ -6,7 +6,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import spray.json.DefaultJsonProtocol._
-import webshop.application.command.{AddCustomerCommand, AddProductToStoreCommand}
+import webshop.application.command.{AddCustomerCommand, AddProductToShoppingCardCommand, AddProductToStoreCommand}
 import webshop.application.handler.HandlerImp
 import webshop.infrastructure.dto.Dto
 
@@ -18,6 +18,7 @@ object WebShop extends App with HandlerImp {
 
   implicit val format = jsonFormat3(AddProductToStoreCommand)
   implicit val formatCustomer = jsonFormat3(AddCustomerCommand)
+  implicit val formatShopping = jsonFormat3(AddProductToShoppingCardCommand)
 
   lazy val route =
     pathPrefix("api") {
@@ -51,10 +52,12 @@ object WebShop extends App with HandlerImp {
         path("addProductToShoppingCard") {
           post {
               // unmarshal with in-scope unmarshaller
-              entity(as[AddProductToStoreCommand]) { p =>
+              entity(as[AddProductToShoppingCardCommand]) { command =>
                 complete {
-                  println(p)
-                  "Order received"
+                  println(command)
+                  val shopping: Either[String, Dto] = getDataHandler(command)
+                  val response = shopping.fold(l => l, r => "Product added to shopping card")
+                  response
                 }
               }
           }

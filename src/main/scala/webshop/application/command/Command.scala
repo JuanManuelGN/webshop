@@ -9,3 +9,7 @@ case class AddProductToStoreCommand(productId: String,
 case class AddCustomerCommand(name: String,
                               email: String,
                               account: String) extends Command
+
+case class AddProductToShoppingCardCommand(productId: String,
+                                           count: Int,
+                                           customer: String) extends Command
