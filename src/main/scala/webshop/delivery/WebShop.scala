@@ -21,14 +21,15 @@ object WebShop extends App with HandlerImp {
 
   lazy val route =
     pathPrefix("api") {
-      path("addUser") {
+      path("addCustomer") {
         put {
           entity(as[AddCustomerCommand]) { command =>
             complete {
               println(s"command $command")
-              val customer: Dto = getDataHandler(command)
+              val customer: Either[String, Dto] = getDataHandler(command)
+              val response = customer.fold(l => l, r => "Customer added")
               println(s"added $customer")
-              "Added customer"
+              response
             }
           }
         }
@@ -39,9 +40,10 @@ object WebShop extends App with HandlerImp {
             entity(as[AddProductToStoreCommand]) { command =>
               complete {
                 println(s"command $command")
-                val product: Dto = getDataHandler(command)
+                val product: Either[String, Dto] = getDataHandler(command)
+                val response = product.fold(l => l, r => "Product added")
                 println(s"dto $product")
-                "Order received"
+                response
               }
             }
           }
@@ -59,6 +61,11 @@ object WebShop extends App with HandlerImp {
         } ~
         path("pay") {
           post {
+            complete("This is a POST request.")
+          }
+        } ~
+        path("getProducts") {
+          get {
             complete("This is a POST request.")
           }
         }

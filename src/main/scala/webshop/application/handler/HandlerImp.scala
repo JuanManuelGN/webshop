@@ -8,7 +8,7 @@ import webshop.infrastructure.respository.RepositoryImp
 trait HandlerImp extends Handler
   with AggregateRootToDto with RepositoryImp with CommandToAggregateRoot {
 
-  val getDataHandler: Command => Dto =
+  val getDataHandler: Command => Either[String, Dto] =
     command =>
       aggregateToDto.compose(getDataRepository).compose(commandToAggregateRoot)(command)
 }

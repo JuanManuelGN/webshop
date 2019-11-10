@@ -5,13 +5,14 @@ import webshop.infrastructure.dto.{CustomerDto, Dto, ProductDto}
 
 trait AggregateRootToDto {
 
-  val aggregateToDto: Aggregate => Dto =
+  val aggregateToDto: Either[String, Aggregate] => Either[String, Dto] =
     aggregate => {
       aggregate match {
-        case par: ProductAggregateRoot =>
-          ProductDto(par.getProductId, par.getProductPrice, par.getProductDescription)
-        case car: CustomerAggregateRoot =>
-          CustomerDto(car.getName, car.getEmail, car.getAccount)
+        case Left(e) => Left(e)
+        case Right(par: ProductAggregateRoot) =>
+          Right(ProductDto(par.getProductId, par.getProductPrice, par.getProductDescription))
+        case Right(car: CustomerAggregateRoot) =>
+          Right(CustomerDto(car.getName, car.getEmail, car.getAccount))
       }
     }
 
