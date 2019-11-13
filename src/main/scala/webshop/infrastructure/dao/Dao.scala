@@ -8,14 +8,15 @@ trait Dao {
   val getDataDao: DaoDto => Either[String, DaoDto] = dto =>
     dto match {
       case p: ProductDaoDto => Right(Store.addProductToStore(p))
+
       case c: CustomerDaoDto => {
         val customerAlredyExistis = Store.getEmailList.contains(c.email)
         if (customerAlredyExistis)
           Left("The customer already exists")
         else
           Right(Store.addCustomer(c))
-
       }
+
       case s: ShoppingDaoDto => {
         val productId = s.product
         val count = s.count

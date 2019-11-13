@@ -20,11 +20,15 @@ object Store {
     } else {
       stock = stock + (daoDto.id -> (daoDto.id, daoDto.price, daoDto.description, 1))
     }
+    println(s"Product added $daoDto")
+    println(s"Product stock ${stock.values}")
     daoDto
   }
 
   def addCustomer(daoDto: CustomerDaoDto): DaoDto = {
     customerList = customerList + (daoDto.email -> daoDto.name )
+    println(s"Customer added $daoDto")
+    println(s"Customer in Store ${customerList}")
     daoDto
   }
 
@@ -47,6 +51,9 @@ object Store {
       shoppingCardList = shoppingCardList - daoDto.email
       shoppingCardList = shoppingCardList + (daoDto.email -> newProductList)
     }
+    println(s"Product added to shopping card $daoDto")
+    println(s"Shopping card ${shoppingCardList.get(daoDto.email)}")
+    println(s"Product stock ${stock.values}")
     daoDto
 
   }
