@@ -11,17 +11,24 @@ object Store {
   var shoppingCardList: Map[String, List[Article]] = Map() // email, products
 
   def addProductToStore(daoDto: ProductDaoDto): DaoDto = {
+
+    println(s"Product to add $daoDto")
+    println(s"Product stock before add ${stock.values}")
+
     val productAlredyExists = stock.contains(daoDto.id)
     if (productAlredyExists) {
       val article = stock.get(daoDto.id).get
-      val articleModified = (article._1, article._2, article._3, article._4 + 1)
+      val articleModified = (article._1, daoDto.price, daoDto.description, article._4 + 1)
       stock = stock - daoDto.id
       stock = stock + (daoDto.id -> articleModified)
     } else {
       stock = stock + (daoDto.id -> (daoDto.id, daoDto.price, daoDto.description, 1))
     }
+
     println(s"Product added $daoDto")
-    println(s"Product stock ${stock.values}")
+    println(s"Product stock after add ${stock.values}")
+    println("")
+
     daoDto
   }
 
@@ -38,7 +45,7 @@ object Store {
     val price = article._2
     val description = article._3
     val articleToShopping = (daoDto.product, price, description, daoDto.count)
-    val shoppingCardExists = !shoppingCardList(daoDto.email).isEmpty
+    val shoppingCardExists = shoppingCardList.contains(daoDto.email)
 
     // Drop product To stock
     stock = dropProduct(daoDto.product, daoDto.count)
@@ -46,10 +53,17 @@ object Store {
     if(!shoppingCardExists) {
       shoppingCardList = shoppingCardList + (daoDto.email -> List(articleToShopping))
     } else {
+
+      // Add product to shopping card
       val productListOnSahoppingCard: List[Article] = shoppingCardList.get(daoDto.email).get
       val newProductList = productListOnSahoppingCard ++ List(articleToShopping)
       shoppingCardList = shoppingCardList - daoDto.email
       shoppingCardList = shoppingCardList + (daoDto.email -> newProductList)
+
+      // Less product to stock
+      val articleModified = (article._1, article._2, article._3, article._4  - daoDto.count)
+      stock = stock - daoDto.product
+      stock = stock + (daoDto.product -> articleModified)
     }
     println(s"Product added to shopping card $daoDto")
     println(s"Shopping card ${shoppingCardList.get(daoDto.email)}")
@@ -64,6 +78,7 @@ object Store {
 
   def getEmailList: List[String] = customerList.keys.toList
 
+  def customerIsExists(email: String): Boolean = customerList.contains(email)
 
   def initProducts: Map[String, (String, Double, String, Int)] =
     Map("milk" -> ("milk", 1.5, "brick of milk", 5),

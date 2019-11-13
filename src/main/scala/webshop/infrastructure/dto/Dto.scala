@@ -9,3 +9,6 @@ case class ProductDto(id: String,
 case class CustomerDto(name: String,
                        email: String,
                        account: String) extends Dto
+
+case class ShoppingDto(productId: String,
+                       count: Int) extends Dto

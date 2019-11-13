@@ -22,13 +22,20 @@ trait Dao {
         val count = s.count
         val customerEmail = s.email
 
-        val productCountInStock = Store.getProductCount(productId)
+        val customerExists = Store.customerIsExists(customerEmail)
 
-        val response = productCountInStock match {
-          case 0 => Left("This article not exists in the shop")
-          case x if x < count => Left("Not enough articles")
-          case _ => Right(Store.addProductToShoppingCard(s))
-        }
+        val response =
+          if (customerExists) {
+            val productCountInStock = Store.getProductCount(productId)
+
+            productCountInStock match {
+              case 0 => Left("This article not exists in the shop")
+              case x if x < count => Left("Not enough articles")
+              case _ => Right(Store.addProductToShoppingCard(s))
+            }
+          } else {
+            Left("Customer not exists")
+          }
 
         response
       }
