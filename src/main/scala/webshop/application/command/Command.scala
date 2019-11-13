@@ -13,3 +13,5 @@ case class AddCustomerCommand(name: String,
 case class AddProductToShoppingCardCommand(productId: String,
                                            count: Int,
                                            customer: String) extends Command
+
+case class PayCommand(email: String) extends Command

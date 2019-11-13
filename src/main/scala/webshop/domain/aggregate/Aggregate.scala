@@ -43,3 +43,11 @@ object ShoppingAggregateRoot {
   def apply(productId: String, count: Int, email: String): ShoppingAggregateRoot =
     new ShoppingAggregateRoot(Product(productId), count, Customer("", email))
 }
+
+case class PayAggregateRoot(private val customer: Customer) extends Aggregate {
+
+  def getEmail: String = customer.email
+}
+object PayAggregateRoot {
+  def apply(email: String): PayAggregateRoot = new PayAggregateRoot(Customer("", email))
+}

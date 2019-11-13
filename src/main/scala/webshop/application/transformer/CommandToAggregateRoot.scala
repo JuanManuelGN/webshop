@@ -1,7 +1,7 @@
 package webshop.application.transformer
 
-import webshop.application.command.{AddCustomerCommand, AddProductToShoppingCardCommand, AddProductToStoreCommand, Command}
-import webshop.domain.aggregate.{Aggregate, CustomerAggregateRoot, ProductAggregateRoot, ShoppingAggregateRoot}
+import webshop.application.command._
+import webshop.domain.aggregate._
 
 trait CommandToAggregateRoot {
 
@@ -14,6 +14,7 @@ trait CommandToAggregateRoot {
           CustomerAggregateRoot(name, email, account)
         case AddProductToShoppingCardCommand(productId, count, email) =>
           ShoppingAggregateRoot(productId, count, email)
+        case PayCommand(email) => PayAggregateRoot(email)
       }
     }
 }

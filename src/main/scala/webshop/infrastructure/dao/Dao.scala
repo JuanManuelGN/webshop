@@ -1,7 +1,7 @@
 package webshop.infrastructure.dao
 
 import webshop.infrastructure.Store
-import webshop.infrastructure.dao.dto.{CustomerDaoDto, DaoDto, ProductDaoDto, ShoppingDaoDto}
+import webshop.infrastructure.dao.dto._
 
 trait Dao {
 
@@ -37,6 +37,16 @@ trait Dao {
             Left("Customer not exists")
           }
 
+        response
+      }
+      case p: PayDaoDto => {
+        val customerExists = Store.customerIsExistsAndHasShoppingCard(p.email)
+        val response =
+          if (customerExists) {
+            Right(Store.pay(p))
+          } else {
+            Left("Customer not exists or doesn't has a shopping card")
+          }
         response
       }
     }

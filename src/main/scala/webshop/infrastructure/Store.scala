@@ -1,6 +1,6 @@
 package webshop.infrastructure
 
-import webshop.infrastructure.dao.dto.{CustomerDaoDto, DaoDto, ProductDaoDto, ShoppingDaoDto}
+import webshop.infrastructure.dao.dto._
 
 object Store {
 
@@ -72,6 +72,11 @@ object Store {
 
   }
 
+  def pay(daoDto: PayDaoDto): DaoDto = {
+    shoppingCardList = shoppingCardList - daoDto.email
+    daoDto
+  }
+
   def getProductCount(productId: String): Int = stock.get(productId).fold(0)(_._4)
 
   def dropProduct(productId: String, count: Int): Map[String, Article] = stock
@@ -80,8 +85,11 @@ object Store {
 
   def customerIsExists(email: String): Boolean = customerList.contains(email)
 
+  def customerIsExistsAndHasShoppingCard(email: String): Boolean =
+    customerIsExists(email) && shoppingCardList.contains(email)
+
   def initProducts: Map[String, (String, Double, String, Int)] =
     Map("milk" -> ("milk", 1.5, "brick of milk", 5),
       "shampoo" -> ("shampoo", 2.0, "shampoo to clean our hair", 3),
-      "potatoes" -> ("potatores", 3.7, "5 kg", 2))
+      "potatoes" -> ("potatoes", 3.7, "5 kg", 2))
 }

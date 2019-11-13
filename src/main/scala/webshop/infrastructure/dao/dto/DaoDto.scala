@@ -13,3 +13,5 @@ case class CustomerDaoDto(name: String,
 case class ShoppingDaoDto(product: String,
                           count: Int,
                           email: String) extends DaoDto
+
+case class PayDaoDto(email: String) extends DaoDto

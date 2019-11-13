@@ -12,3 +12,5 @@ case class CustomerDto(name: String,
 
 case class ShoppingDto(productId: String,
                        count: Int) extends Dto
+
+case class PayDto(email: String) extends Dto

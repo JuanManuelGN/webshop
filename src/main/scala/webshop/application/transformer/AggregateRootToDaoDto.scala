@@ -1,7 +1,7 @@
 package webshop.application.transformer
 
-import webshop.domain.aggregate.{Aggregate, CustomerAggregateRoot, ProductAggregateRoot, ShoppingAggregateRoot}
-import webshop.infrastructure.dao.dto.{CustomerDaoDto, DaoDto, ProductDaoDto, ShoppingDaoDto}
+import webshop.domain.aggregate._
+import webshop.infrastructure.dao.dto._
 
 trait AggregateRootToDaoDto {
 
@@ -16,6 +16,7 @@ trait AggregateRootToDaoDto {
       case sar: ShoppingAggregateRoot => ShoppingDaoDto(sar.getProductId,
                                                         sar.getProductCount,
                                                         sar.getCustomerEmail)
+      case payar: PayAggregateRoot => PayDaoDto(payar.getEmail)
     }
   }
 }
