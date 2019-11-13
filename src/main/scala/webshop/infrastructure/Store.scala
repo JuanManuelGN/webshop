@@ -47,9 +47,11 @@ object Store {
     val articleToShopping = (daoDto.product, price, description, daoDto.count)
     val shoppingCardExists = shoppingCardList.contains(daoDto.email)
 
-    // Drop product To stock
-    stock = dropProduct(daoDto.product, daoDto.count)
-    // Add product to shopiing card
+    // Less product to stock
+    val articleModified = (article._1, article._2, article._3, article._4  - daoDto.count)
+    stock = stock - daoDto.product
+    stock = stock + (daoDto.product -> articleModified)
+    // Add product to shopping card
     if(!shoppingCardExists) {
       shoppingCardList = shoppingCardList + (daoDto.email -> List(articleToShopping))
     } else {
@@ -59,11 +61,6 @@ object Store {
       val newProductList = productListOnSahoppingCard ++ List(articleToShopping)
       shoppingCardList = shoppingCardList - daoDto.email
       shoppingCardList = shoppingCardList + (daoDto.email -> newProductList)
-
-      // Less product to stock
-      val articleModified = (article._1, article._2, article._3, article._4  - daoDto.count)
-      stock = stock - daoDto.product
-      stock = stock + (daoDto.product -> articleModified)
     }
     println(s"Product added to shopping card $daoDto")
     println(s"Shopping card ${shoppingCardList.get(daoDto.email)}")
@@ -78,8 +75,6 @@ object Store {
   }
 
   def getProductCount(productId: String): Int = stock.get(productId).fold(0)(_._4)
-
-  def dropProduct(productId: String, count: Int): Map[String, Article] = stock
 
   def getEmailList: List[String] = customerList.keys.toList
 
